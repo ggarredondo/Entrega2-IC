@@ -147,33 +147,52 @@
 )
 
 ;;; Resultados para cada problema posible
-(defrule problema1
-(declare (salience -10)) ;;; Para asegurarnos de que el sistema ha tenido tiempo de inferir y hacer las respectivas combinaciones antes de dar una respuesta
-(FactorCerteza problema_starter ?r ?f)
+(defrule problema
+(declare (salience -1)) ;;; Para asegurarnos de que el sistema ha tenido tiempo de inferir y hacer las respectivas combinaciones antes de dar una respuesta
+(FactorCerteza ?p ?r ?f)
+(test (neq ?p hace_intentos_arrancar)) ;;; Para asegurarnos que no muestre las evidencias como problemas
+(test (neq ?p hay_gasolina_en_deposito))
+(test (neq ?p encienden_las_luces))
+(test (neq ?p gira_motor))
 =>
-(printout t "Considero que " ?r " hay un problema con el starter con un " ?f " de certeza" crlf)
+(printout t "Considero que " ?r " se da el problema " ?p " con un " ?f " de certeza" crlf)
 )
 
-(defrule problema2
-(declare (salience -10))
-(FactorCerteza problema_bujias ?r ?f)
+;;; Escoger hipótesis final
+(deffacts hipotesisInicial (Hipotesis ninguna no 0)) ;;; Hipótesis inicial con certeza 0
+
+;;; Regla para comparar la certeza de la hipótesis actual con la certeza de otro problema cualquiera
+(defrule hipotesisFinal
+(declare (salience -2)) ;;; Para asegurarnos de que el sistema ha tenido tiempo de inferir y hacer las respectivas combinaciones antes de dar una respuesta
+?h <- (Hipotesis ?p1 ?r1 ?f1)
+(FactorCerteza ?p2 ?r2 ?f2)
+(test (> ?f2 ?f1)) ;;; Si el problema 2 si tiene mayor certeza que el de la hipótesis actual...
+(test (neq ?p2 hace_intentos_arrancar)) ;;; Para asegurarnos que no tome en cuenta certezas de evidencias
+(test (neq ?p2 hay_gasolina_en_deposito))
+(test (neq ?p2 encienden_las_luces))
+(test (neq ?p2 gira_motor))
 =>
-(printout t "Considero que " ?r " hay un problema con las bujias con un " ?f " de certeza" crlf)
+(retract ?h) ;;; Se retracta la hipótesis escogida
+(assert (Hipotesis ?p2 ?r2 ?f2)) ;;; Se levanta la nueva hipótesis con el segundo problema
 )
 
-(defrule problema3
-(declare (salience -10))
-(FactorCerteza problema_bateria ?r ?f)
+;;; Decir al usuario la hipótesis con mayor certeza
+(defrule explicarHipotesis
+(declare (salience -3)) ;;; Menor prioridad para asegurarnos que se ha terminado de inferir la hipótesis
+(Hipotesis ?p ?r ?f)
+(not (Hipotesis ninguna no 0)) ;;; Asegurarnos que esa hipótesis no es la inicial
 =>
-(printout t "Considero que " ?r " hay un problema con la bateria con un " ?f " de certeza" crlf)
+(printout t "Por tanto, mi hipotesis final es que " ?r " se da el problema " ?p " con un " ?f " de certeza" crlf)
 )
 
-(defrule problema4
-(declare (salience -10))
-(FactorCerteza motor_llega_gasolina ?r ?f)
+;;; Decir al usuario que no se ha encontrado hipótesis
+(defrule noHayHipotesis
+(declare (salience -3))
+(Hipotesis ninguna no 0) ;;; Algo que sabemos si la hipótesis siga siendo la inicial después del proceso de inferir hipótesis (prioridad -3)
 =>
-(printout t "Considero que " ?r " llega gasolina al motor con un " ?f " de certeza" crlf)
+(printout t "No se ha encontrado problema" crlf)
 )
+
 
 
 
