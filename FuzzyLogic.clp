@@ -42,7 +42,7 @@
  
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CONOCIMIENTO ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Entradas: Peso y Temperatura de un enfermo  (dato ?variable ?valor)
+; Entradas: Peso, Temperatura y Altura de un enfermo  (dato ?variable ?valor)
 ; Salidad: dosis de medicamento a administrar (fuzzy inference ?variable ?valor)
 ;;;;;;;;;;;;Conocimiento ;;;;;;;;;;;;;;;;; 
 ;; Si la tempetura es normal no administrar medicamento
@@ -55,6 +55,9 @@
 (deffacts variables_difusas
 (variable temperatura)
 (variable peso)
+
+(variable altura)
+
 (variable dosis)
 )
 
@@ -66,7 +69,13 @@
 (cd temperatura alta 37.8 38.5 100 100)  ; aproximadamente mas 38.5
 (cd peso bajo 0 0 50 60)     ; aproximadamente  menos de 50
 (cd peso medio 55 62 70 75)  ; aproximadamente entre 62 y 70
-(cd peso alto 70 80 300 300) ; aproximadamente mas de 80
+
+(cd peso alto 70 90 300 300) ; Aproximádamente más de 90 kg.
+
+(cd altura baja 0 0 160 170) ; Aproximádamente menos de 160 cm.
+(cd altura media 170 173 175 178) ; Aproximádamente entre 173 cm y 175 cm.
+(cd altura alta 178 180 300 300) ; Aproximádamente más de 180 cm.
+
 (cd dosis cero 0 0 0 0)
 (cd dosis baja 4 5 5 6.5)    ; aproximadamente 5
 (cd dosis media 6 7 7 8)     ; aproximadamente 7
@@ -94,6 +103,12 @@
 (regla 4 antecedente temperatura alta)
 (regla 4 consecuente dosis alta)
 (regla 4 explicacion "Si la temperatura es alta, la dosis a aplicar es alta")
+
+(regla 5 antecedente temperatura destemplada)
+(regla 5 antecedente altura alta)
+(regla 5 antecedente peso alto)
+(regla 5 consecuente dosis alta)
+(regla 5 explicacion "Si esta destemplado y el peso y la altura son altos, la dosis a aplicar es alta")
 )
 
 
@@ -273,6 +288,13 @@
 )
 
 (defrule pregunta3
+(declare (salience 1))
+=>
+(printout t "Altura: ")
+(assert (dato altura (read)))
+)
+
+(defrule pregunta4
 =>
 (assert (modulo calculo_fuzzy))
 )
