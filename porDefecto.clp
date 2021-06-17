@@ -56,7 +56,7 @@
 (vuela ?x ?s seguro)
 =>
 (retract ?f)
-(bind ?expl (str-cat "retractamos que un " ?x ?r " vuela por defecto, porque sabemos seguro que " ?x ?s " vuela"))
+(bind ?expl (str-cat "retractamos que un " ?x " " ?r " vuela por defecto, porque sabemos seguro que " ?x " " ?s " vuela"))
 (assert (explicacion retracta_vuela ?x ?expl))
 )
 ;;; COMENTARIO: esta regla también elimina los por defecto cuando ya está seguro
@@ -89,7 +89,7 @@
 (not (animal ?x)) ;; si el animal consultado no existe como "animal" en la bc
 =>
 (printout t "Disculpeme pero desconozco ese animal. Es un ave o un mamifero?: " crlf)
-(assert (aniadirTipo (read)) ;; hecho para saber qué tipo añadir
+(assert (aniadirTipo (read))) ;; hecho para saber qué tipo añadir
 )
 
 ;;; añadir tipo del animal consultado si es ave
@@ -97,7 +97,7 @@
 (consultado ?x)
 (aniadirTipo ave)
 =>
-(ave ?x)
+(assert (ave ?x))
 )
 
 ;;; añadir tipo del animal consultado si es mamifero
@@ -105,10 +105,25 @@
 (consultado ?x)
 (aniadirTipo mamifero)
 =>
-(mamifero ?x)
+(assert (mamifero ?x))
 )
 
+;;; Dar respuesta sobre si vuela o no el animal consultado
+(defrule respuesta
+(consultado ?x)
+(explicacion vuela ?x ?expl)
+=>
+(printout t ?expl crlf)
+)
 
+;;; En caso de que la afirmación por defecto se haya retractado
+(defrule corregir_respuesta
+(declare (salience -1))
+(consultado ?x)
+(explicacion retracta_vuela ?x ?expl)
+=>
+(printout t ?expl crlf)
+)
 
 
 
