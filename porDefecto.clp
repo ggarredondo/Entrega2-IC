@@ -56,7 +56,7 @@
 (vuela ?x ?s seguro)
 =>
 (retract ?f)
-(bind ?expl (str-cat "retractamos que un " ?x " " ?r " vuela por defecto, porque sabemos seguro que " ?x " " ?s " vuela"))
+(bind ?expl (str-cat "retractamos que un " ?x " " ?r " vuela por defecto, porque sabemos seguro que un " ?x " " ?s " vuela"))
 (assert (explicacion retracta_vuela ?x ?expl))
 )
 ;;; COMENTARIO: esta regla también elimina los por defecto cuando ya está seguro
