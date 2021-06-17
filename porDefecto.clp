@@ -88,11 +88,11 @@
 (consultado ?x)
 (not (animal ?x)) ;; si el animal consultado no existe como "animal" en la bc
 =>
-(printout t "Disculpeme pero desconozco ese animal. Es un ave o un mamifero?: " crlf)
+(printout t "Disculpeme pero desconozco ese animal. Es un ave o un mamifero (si no lo sabe, escriba 'ns')?: " crlf)
 (assert (asignarTipo (read))) ;; hecho para saber qué tipo asignarle
 )
 
-;;; añadir tipo del animal consultado si es ave
+;;; asignar tipo del animal consultado si es ave
 (defrule nuevoTipoAve
 (consultado ?x) ;;; si hay un animal consultado
 (asignarTipo ave) ;;; y se quiere asignar el tipo ave
@@ -100,12 +100,20 @@
 (assert (ave ?x)) ;;; añadir hecho de que el animal consultado es un ave
 )
 
-;;; añadir tipo del animal consultado si es mamifero
+;;; asignar tipo del animal consultado si es mamifero
 (defrule nuevoTipoMamifero
 (consultado ?x) ;;; si hay un animal consultado
 (asignarTipo mamifero) ;;; y se le quiere asignar el tipo mamifero
 =>
 (assert (mamifero ?x)) ;;; añadir hecho de que el animal consultado es un mamifero
+)
+
+;;; añadir el animal como animal genérico si no se sabe si es mamifero o ave
+(defrule nuevoTipoNS
+(consultado ?x) ;;; si hay un animal consultado
+(asignarTipo ns) ;;; pero no se conoce el tipo
+=>
+(assert (animal ?x)) ;;; añadir el hecho de que el animal consultado es, en efecto, un animal
 )
 
 ;;; Dar respuesta sobre si vuela o no el animal consultado
