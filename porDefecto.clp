@@ -89,40 +89,40 @@
 (not (animal ?x)) ;; si el animal consultado no existe como "animal" en la bc
 =>
 (printout t "Disculpeme pero desconozco ese animal. Es un ave o un mamifero?: " crlf)
-(assert (aniadirTipo (read))) ;; hecho para saber qué tipo añadir
+(assert (asignarTipo (read))) ;; hecho para saber qué tipo asignarle
 )
 
 ;;; añadir tipo del animal consultado si es ave
 (defrule nuevoTipoAve
-(consultado ?x)
-(aniadirTipo ave)
+(consultado ?x) ;;; si hay un animal consultado
+(asignarTipo ave) ;;; y se quiere asignar el tipo ave
 =>
-(assert (ave ?x))
+(assert (ave ?x)) ;;; añadir hecho de que el animal consultado es un ave
 )
 
 ;;; añadir tipo del animal consultado si es mamifero
 (defrule nuevoTipoMamifero
-(consultado ?x)
-(aniadirTipo mamifero)
+(consultado ?x) ;;; si hay un animal consultado
+(asignarTipo mamifero) ;;; y se le quiere asignar el tipo mamifero
 =>
-(assert (mamifero ?x))
+(assert (mamifero ?x)) ;;; añadir hecho de que el animal consultado es un mamifero
 )
 
 ;;; Dar respuesta sobre si vuela o no el animal consultado
 (defrule respuesta
 (consultado ?x)
-(explicacion vuela ?x ?expl)
+(explicacion vuela ?x ?expl) ;;; si para el animal consultado hay una explicación de si vuela o no
 =>
-(printout t ?expl crlf)
+(printout t ?expl crlf) ;;; imprimir explicación
 )
 
 ;;; En caso de que la afirmación por defecto se haya retractado
 (defrule corregir_respuesta
 (declare (salience -1))
 (consultado ?x)
-(explicacion retracta_vuela ?x ?expl)
+(explicacion retracta_vuela ?x ?expl) ;;; si para el animal consultado hay una explicación la cual ha sido retractada
 =>
-(printout t ?expl crlf)
+(printout t ?expl crlf) ;;; imprimir explicación de retractación
 )
 
 
