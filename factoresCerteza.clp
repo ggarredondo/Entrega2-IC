@@ -43,7 +43,7 @@
 			then
 				(bind ?rv (+ (+ ?fc1 ?fc2) (* ?fc1 ?fc2)))
 			else
-				(bind ?rv (/ (+ ?fc1 ?fc2) (-1 (min (abs ?fc1) (abs ?fc2)))))
+				(bind ?rv (/ (+ ?fc1 ?fc2) (- 1 (min (abs ?fc1) (abs ?fc2)))))
 		)
 )
 ?rv
