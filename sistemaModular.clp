@@ -165,8 +165,8 @@
 )
 
 (defrule comenzarExplicaciones
-(modulo elva)
 (declare (salience -1)) ;;; Para que no salte antes del cuestionario.
+(modulo elva)
 (not (cuestionario)) ;;; Para que no salte durante el cuestionario.
 =>
 (printout t crlf "Sabiendo que..." crlf)
@@ -193,8 +193,8 @@
 )
 
 (defrule finalizarExplicacion
-(modulo elva)
 (declare (salience -1)) ;;; Para que no salte antes de las explicaciones.
+(modulo elva)
 (justificar)
 (RamaAconsejada ?r)
 =>
@@ -202,8 +202,8 @@
 )
 
 (defrule finalizarNoExplicacion ;;; Regla para el caso en el que no se consiga deducir cuál es la mejor rama para el usuario por falta de información.
-(modulo elva)
 (declare (salience -1)) ;;; Para que no salte antes de las preguntas y escoger la rama.
+(modulo elva)
 (cuestionario) ;;; Si el hecho 'cuestionario' sigue en pie, es porque no se ha escogido rama (el hecho 'cuestionario' se retracta al escoger rama).
 =>
 (printout t "La informacion es insuficiente. Por favor, intentelo de nuevo (demasiados no/nsnc)" crlf)
